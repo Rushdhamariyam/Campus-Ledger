@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Event - Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="add_events.css">
+</head>
+<body>
+    <div class="background-orbs"><div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div></div>
+    
+    <div class="dashboard-container">
+        <!-- Top Nav -->
+        <nav class="top-nav glass-panel fade-in-up">
+            <h1 class="logo-small">CampusLedger Admin</h1>
+            <div class="nav-right">
+                <a href="admin_dashboard.html" class="nav-link">Dashboard</a>
+                <a href="send_tokens.html" class="nav-link">Send Tokens</a>
+                <a href="add_events.html" class="nav-link active">Add Event</a>
+                <button id="connect-wallet-btn" class="connect-btn">Connect Wallet</button>
+            </div>
+        </nav>
+
+        <main class="dashboard-content-centered fade-in-up delay-1">
+            <div class="glass-panel compact-box fade-in-up delay-2" style="margin-top: -3vh !important;">
+                <h2 class="welcome-text" style="text-align: center; margin-bottom: 1.5rem; font-size: 1.4rem; letter-spacing: 0.5px;">Post New Event</h2>
+                <form class="event-form" id="add-event-form" style="display: flex; flex-direction: column; gap: 0.8rem;">
+                    <div class="form-row" style="display: flex; gap: 0.8rem;">
+                        <div class="form-group" style="flex: 1;">
+                            <label style="color: var(--text-secondary); font-size: 0.75rem; margin-bottom: 0.2rem; display: block; font-weight: 600; text-transform: uppercase;">Club Name</label>
+                            <input type="text" id="club-name" class="form-input" placeholder="e.g. TinkerHub" required style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 0.5rem 0.8rem; color: #fff; width: 100%; font-family: inherit; font-size: 0.9rem;">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label style="color: var(--text-secondary); font-size: 0.75rem; margin-bottom: 0.2rem; display: block; font-weight: 600; text-transform: uppercase;">Event Name</label>
+                            <input type="text" id="event-name" class="form-input" placeholder="e.g. Hackathon" required style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 0.5rem 0.8rem; color: #fff; width: 100%; font-family: inherit; font-size: 0.9rem;">
+                        </div>
+                    </div>
+                    <div class="form-row" style="display: flex; gap: 0.8rem;">
+                        <div class="form-group" style="flex: 1;">
+                            <label style="color: var(--text-secondary); font-size: 0.75rem; margin-bottom: 0.2rem; display: block; font-weight: 600; text-transform: uppercase;">Date</label>
+                            <input type="date" id="event-date" class="form-input" required style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 0.5rem 0.8rem; color: #fff; width: 100%; font-family: inherit; font-size: 0.9rem;">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label style="color: var(--text-secondary); font-size: 0.75rem; margin-bottom: 0.2rem; display: block; font-weight: 600; text-transform: uppercase;">Max Participants</label>
+                            <input type="number" id="event-max" class="form-input" placeholder="50" required style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 0.5rem 0.8rem; color: #fff; width: 100%; font-family: inherit; font-size: 0.9rem;">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label style="color: var(--text-secondary); font-size: 0.75rem; margin-bottom: 0.2rem; display: block; font-weight: 600; text-transform: uppercase;">Reward (CTK)</label>
+                            <input type="number" id="event-cost" class="form-input" placeholder="25" required style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 0.5rem 0.8rem; color: #fff; width: 100%; font-family: inherit; font-size: 0.9rem;">
+                        </div>
+                    </div>
+                    <div class="form-row" style="display: flex; gap: 0.8rem;">
+                        <div class="form-group" style="flex: 1;">
+                            <label style="color: var(--text-secondary); font-size: 0.75rem; margin-bottom: 0.2rem; display: block; font-weight: 600; text-transform: uppercase;">Start Time</label>
+                            <input type="time" id="start-time" class="form-input" required style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 0.5rem 0.8rem; color: #fff; width: 100%; font-family: inherit; font-size: 0.9rem;">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label style="color: var(--text-secondary); font-size: 0.75rem; margin-bottom: 0.2rem; display: block; font-weight: 600; text-transform: uppercase;">End Time</label>
+                            <input type="time" id="end-time" class="form-input" required style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 0.5rem 0.8rem; color: #fff; width: 100%; font-family: inherit; font-size: 0.9rem;">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="margin-top: 0.5rem; width: 100%; border-radius: 12px; font-weight: 700; padding: 0.8rem; font-size: 1rem;">Post Event</button>
+                    <p id="event-status" style="text-align: center; margin-top: 0.8rem; font-size: 0.85rem; font-weight: 500;"></p>
+                </form>
+            </div>
+        </main>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js" type="application/javascript"></script>
+    <script src="script.js"></script>
+    <script>
+        document.getElementById('add-event-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const status = document.getElementById('event-status');
+            status.innerText = "Posting...";
+            status.style.color = "var(--text-secondary)";
+
+            const data = {
+                club_name: document.getElementById('club-name').value,
+                event_name: document.getElementById('event-name').value,
+                date: document.getElementById('event-date').value,
+                max_participants: parseInt(document.getElementById('event-max').value),
+                cost: parseInt(document.getElementById('event-cost').value),
+                start_time: document.getElementById('start-time').value,
+                end_time: document.getElementById('end-time').value
+            };
+
+            try {
+                const response = await fetch('/api/events/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const res = await response.json();
+                if (res.success) {
+                    status.innerText = "✅ Event posted successfully!";
+                    status.style.color = "#10b981";
+                    document.getElementById('add-event-form').reset();
+                } else {
+                    status.innerText = "❌ Error: " + res.message;
+                    status.style.color = "#f43f5e";
+                }
+            } catch (err) {
+                status.innerText = "❌ Connection error";
+                status.style.color = "#f43f5e";
+            }
+        };
+    </script>
+</body>
+</html>

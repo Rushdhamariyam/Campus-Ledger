@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AETHRA - Campus Ledger</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="club_page.css">
+</head>
+<body>
+    <div class="background-orbs"><div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div></div>
+    
+    <div class="club-container">
+        <nav class="top-nav glass-panel fade-in-up">
+            <h1 class="logo-small">CampusLedger</h1>
+            <div class="nav-right" style="align-items: center;">
+                <a href="student_dashboard.html" class="nav-link">Home</a>
+                <a href="tickets.html" class="nav-link">Tickets</a>
+                <button id="connect-wallet-btn" class="connect-btn" style="background: rgba(99, 102, 241, 0.15); border: 1px solid var(--accent-primary); padding: 0.45rem 1.25rem; border-radius: 20px; color: #fff; font-family: 'Outfit'; font-weight: 600; margin-left: 0.5rem; transition: all 0.3s ease;">Connect Wallet</button>
+            </div>
+        </nav>
+
+        <div class="club-header-box glass-panel fade-in-up delay-1">
+            <div class="club-title-row">
+                <img src="AETHRA.jpeg" alt="AETHRA Logo" class="club-logo-img">
+                <h2 class="club-name">AETHRA</h2>
+            </div>
+            
+            <div class="club-wallet-info" style="margin-top: 0.5rem; display: flex; align-items: center; gap: 0.5rem; background: rgba(0,0,0,0.2); padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); width: fit-content;">
+                 <span class="wallet-label" style="color: var(--text-secondary); font-size: 0.9rem;">Club Wallet:</span>
+                 <span class="wallet-address" data-full-address="0xabcdef1234567890abcdef1234567890abcdef12" style="color: var(--text-primary); font-family: monospace; font-size: 1rem;">0xabcd...ef12</span>
+            </div>
+
+            <div class="club-stats-display" style="display: flex; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap;">
+                <div class="stat-card">
+                    <h3 style="font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.25rem;">Total Received</h3>
+                    <p class="stat-value text-accent" id="total-received" style="font-size: 1.4rem; font-weight: 700;">0 CTK</p>
+                </div>
+                <div class="stat-card">
+                    <h3 style="font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.25rem;">Total Sent</h3>
+                    <p class="stat-value text-pink" id="total-sent" style="font-size: 1.4rem; font-weight: 700;">0 CTK</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="club-main fade-in-up delay-2">
+            <div class="transactions-section glass-panel">
+                <h3 class="section-title">Club Ledger History</h3>
+                <div class="scrollable-table-container">
+                    <table class="data-table">
+                        <thead><tr><th>Date</th><th>From</th><th>To</th><th>Amount</th><th>Purpose</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js" type="application/javascript"></script>
+    <script src="script.js"></script>
+</body>
+</html>

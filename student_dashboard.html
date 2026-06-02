@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Ledger - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="student_dashboard.css">
+</head>
+<body>
+    <div class="background-orbs"><div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div></div>
+    
+    <div class="dashboard-container">
+        <!-- Top Navigation -->
+        <nav class="top-nav glass-panel fade-in-up">
+            <h1 class="logo-small">CampusLedger</h1>
+            <div class="nav-right">
+                <a href="student_dashboard.html" class="nav-link active">Home</a>
+                <a href="tickets.html" class="nav-link">Tickets</a>
+                <button id="connect-wallet-btn" class="connect-btn">Connect Wallet</button>
+            </div>
+        </nav>
+
+        <!-- Stats Banner -->
+        <div class="stats-banner glass-panel fade-in-up delay-1">
+            <div class="stats-left">
+                <div class="stat-card" style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span class="stat-label">Balance:</span>
+                    <span class="stat-value text-accent balance-amount">0 CTK</span>
+                </div>
+                <span class="stat-divider">|</span>
+                <div class="stat-card" style="display: flex; align-items: center; gap: 0.5rem;">
+                    <h3 style="font-size: 0.95rem; font-weight: 600; color: var(--text-secondary); margin: 0;">Total Earned:</h3>
+                    <span class="stat-value text-accent" id="total-earned">0 CTK</span>
+                </div>
+                <span class="stat-divider">|</span>
+                <div class="stat-card" style="display: flex; align-items: center; gap: 0.5rem;">
+                    <h3 style="font-size: 0.95rem; font-weight: 600; color: var(--text-secondary); margin: 0;">Total Spent:</h3>
+                    <span class="stat-value text-pink" id="total-spent">0 CTK</span>
+                </div>
+            </div>
+            <a href="student_profile.html" class="profile-link" style="display: flex; flex-direction: column; align-items: center; text-decoration: none;">
+                <span class="profile-icon" style="font-size: 2rem;">👨‍🎓</span>
+                <span class="profile-name" style="font-weight: 600; color: white;">User</span>
+                <span class="profile-department" style="font-size: 0.75rem; color: var(--text-secondary);"></span>
+            </a>
+        </div>
+
+        <div class="dashboard-content">
+            <!-- Clubs Section -->
+            <h2 class="section-title fade-in-up delay-2">Explore Clubs</h2>
+            <div class="clubs-grid fade-in-up delay-2">
+                <a href="club_orso.html" class="club-card glass-box-small">ORSO</a>
+                <a href="club_tinkerhub.html" class="club-card glass-box-small">TINKERHUB</a>
+                <a href="club_asthra.html" class="club-card glass-box-small">ASTHRA</a>
+                <a href="club_ethreal.html" class="club-card glass-box-small">ETHREAL</a>
+                <a href="club_d2r.html" class="club-card glass-box-small">D2R</a>
+                <a href="club_aethra.html" class="club-card glass-box-small">AETHRA</a>
+                <a href="club_foss.html" class="club-card glass-box-small">FOSS CLUB</a>
+            </div>
+
+            <!-- Transactions Section -->
+            <div class="transactions-section glass-panel fade-in-up delay-3">
+                <h2 class="section-title">Recent Transactions</h2>
+                <div class="scrollable-table-container">
+                    <table class="transaction-table data-table">
+                        <thead><tr><th>Date</th><th>From</th><th>To</th><th>Amount</th><th>Purpose</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js" type="application/javascript"></script>
+    <script src="script.js"></script>
+</body>
+</html>

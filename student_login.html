@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Ledger - Student Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="student_login.css">
+</head>
+<body>
+    <div class="background-orbs"><div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div></div>
+    
+    <div class="container">
+        <header class="header">
+            <h1 class="logo fade-in-up">CampusLedger</h1>
+        </header>
+
+        <div class="glass-box login-box fade-in-up delay-1" id="auth-box">
+            <h2 class="welcome-text" id="form-title">Student Login</h2>
+            
+            <!-- Login Form -->
+            <form class="login-form" id="student-login-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter your username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                </div>
+                <div id="login-error" style="color: #ef4444; font-size: 0.95rem; display: none; text-align: center; margin-bottom: 0.8rem; background: rgba(239, 68, 68, 0.1); padding: 0.5rem; border-radius: 6px; border: 1px solid rgba(239, 68, 68, 0.3);">Invalid credentials</div>
+                
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary submit-btn">
+                        <span class="btn-text">Login</span>
+                    </button>
+                    <button type="button" class="btn btn-secondary forget-btn" onclick="toggleForm()">
+                        <span class="btn-text">Need an account? Sign Up</span>
+                    </button>
+                </div>
+            </form>
+
+            <!-- Signup Form -->
+            <form class="login-form" id="student-signup-form" style="display: none;">
+                <div class="form-group">
+                    <label for="reg-username">Username</label>
+                    <input type="text" id="reg-username" placeholder="Choose a username" required>
+                </div>
+                <div class="form-group">
+                    <label for="department">Department</label>
+                    <select id="department" required style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.3); color: white; font-family: 'Outfit';">
+                        <option value="" disabled selected>Select your department</option>
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Information Technology">Information Technology</option>
+                        <option value="Electronics & Communication">Electronics & Communication</option>
+                        <option value="Mechanical Engineering">Mechanical Engineering</option>
+                        <option value="Civil Engineering">Civil Engineering</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="reg-password">Password</label>
+                    <input type="password" id="reg-password" placeholder="Create a password" required>
+                </div>
+                <div id="signup-error" style="color: #ef4444; font-size: 0.95rem; display: none; text-align: center; margin-bottom: 0.8rem; background: rgba(239, 68, 68, 0.1); padding: 0.5rem; border-radius: 6px; border: 1px solid rgba(239, 68, 68, 0.3);">Error</div>
+                
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary submit-btn-reg">
+                        <span class="btn-text">Register</span>
+                    </button>
+                    <button type="button" class="btn btn-secondary forget-btn" onclick="toggleForm()">
+                        <span class="btn-text">Already have an account? Login</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Clear any previous wallet connection session on new login attempt
+        sessionStorage.removeItem('walletConnected');
+
+        let isLogin = true;
+        function toggleForm() {
+            isLogin = !isLogin;
+            document.getElementById('student-login-form').style.display = isLogin ? 'block' : 'none';
+            document.getElementById('student-signup-form').style.display = isLogin ? 'none' : 'block';
+            document.getElementById('form-title').innerText = isLogin ? "Student Login" : "Student Registration";
+        }
+
+        document.getElementById('student-login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMsg = document.getElementById('login-error');
+            const submitBtn = document.querySelector('.submit-btn .btn-text');
+            
+            errorMsg.style.display = 'none';
+            submitBtn.innerText = 'Authenticating...';
+            
+            try {
+                const response = await fetch('/api/login/student', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    submitBtn.innerText = 'Success! Redirecting...';
+                    window.location.href = data.redirect;
+                } else {
+                    errorMsg.innerText = data.message;
+                    errorMsg.style.display = 'block';
+                    submitBtn.innerText = 'Login';
+                }
+            } catch (err) {
+                errorMsg.innerText = "Error connecting to server. Is Flask running?";
+                errorMsg.style.display = 'block';
+                submitBtn.innerText = 'Login';
+            }
+        });
+
+        document.getElementById('student-signup-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('reg-username').value;
+            const department = document.getElementById('department').value;
+            const password = document.getElementById('reg-password').value;
+            const errorMsg = document.getElementById('signup-error');
+            const submitBtn = document.querySelector('.submit-btn-reg .btn-text');
+            
+            errorMsg.style.display = 'none';
+            submitBtn.innerText = 'Registering...';
+            
+            try {
+                const response = await fetch('/api/signup/student', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password, department })
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    submitBtn.innerText = 'Success! Redirecting...';
+                    window.location.href = data.redirect;
+                } else {
+                    errorMsg.innerText = data.message;
+                    errorMsg.style.display = 'block';
+                    submitBtn.innerText = 'Register';
+                }
+            } catch (err) {
+                errorMsg.innerText = "Error connecting to server.";
+                errorMsg.style.display = 'block';
+                submitBtn.innerText = 'Register';
+            }
+        });
+    </script>
+</body>
+</html>

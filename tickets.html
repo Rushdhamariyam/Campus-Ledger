@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Ledger - Tickets</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="tickets.css">
+</head>
+<body>
+    <div class="background-orbs"><div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div></div>
+    
+    <div class="tickets-container">
+        <nav class="top-nav glass-panel fade-in-up">
+            <h1 class="logo-small">CampusLedger</h1>
+            <div class="nav-right" style="align-items: center;">
+                <a href="student_dashboard.html" class="nav-link">Home</a>
+                <a href="tickets.html" class="nav-link active">Tickets</a>
+                <a href="student_profile.html" class="nav-link">Profile</a>
+                <button id="connect-wallet-btn" style="background: rgba(99, 102, 241, 0.15); border: 1px solid var(--accent-primary); padding: 0.45rem 1.25rem; border-radius: 20px; color: #fff; cursor: pointer; font-family: 'Outfit'; font-weight: 600; margin-left: 0.5rem; transition: all 0.3s ease;">Connect Wallet</button>
+            </div>
+        </nav>
+
+        <div class="vertical-stats-banner glass-panel fade-in-up delay-1">
+            <div class="stats-left-stack">
+                <span>View & Book Upcoming Events</span>
+                <span class="user-name">User</span>
+            </div>
+            <div class="stats-right-balance">
+                <span class="balance-label">Balance</span>
+                <span class="balance-amount">0 CTK</span>
+            </div>
+        </div>
+
+        <div class="events-section glass-panel fade-in-up delay-2">
+            <h2 class="section-title">Upcoming Events</h2>
+            <div class="events-list-scrollable" id="events-container">
+                <p style="text-align:center; padding:2rem; color:var(--text-secondary);">Loading events...</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal" id="booking-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:999; align-items:center; justify-content:center;">
+        <div class="glass-panel" style="width: 90%; max-width: 400px; position:relative;">
+            <span class="close-modal" style="position:absolute; right:1rem; top:1rem; cursor:pointer; font-size:1.5rem;">&times;</span>
+            <h2 style="margin-bottom: 1rem;">Confirm Booking</h2>
+            <form id="send-token-form">
+                <input type="hidden" id="student-wallet" value="">
+                <input type="hidden" id="token-amount" value="0">
+                <input type="hidden" id="purpose" value="">
+                <p id="modal-event-title" style="margin-bottom:0.5rem; font-weight: 600;"></p>
+                <p id="modal-event-club" style="margin-bottom:0.5rem; font-size: 0.9rem; color: var(--text-secondary);"></p>
+                <p id="modal-event-price" style="color:var(--accent-primary); font-weight:bold; margin-bottom:1.5rem; font-size: 1.2rem;"></p>
+                <button type="submit" class="buy-btn send-btn" style="width:100%; padding: 1rem; border-radius: 8px;">Confirm & Pay</button>
+            </form>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js" type="application/javascript"></script>
+    <script src="script.js"></script>
+    <script>
+        async function loadEvents() {
+            const container = document.getElementById('events-container');
+            try {
+                const response = await fetch('/api/events');
+                const data = await response.json();
+                if (data.success && data.events.length > 0) {
+                    const now = new Date();
+                    const upcomingEvents = data.events.filter(event => {
+                        const eventDate = new Date(`${event.date}T${event.start_time}`);
+                        return eventDate > now;
+                    });
+
+                    if (upcomingEvents.length > 0) {
+                        container.innerHTML = upcomingEvents.map(event => `
+                            <div class="event-card">
+                                <div class="event-details">
+                                    <div class="event-row"><span class="event-label">Club:</span><span class="event-val club-tag" style="text-transform: uppercase; font-weight: 700;">${event.club_name}</span></div>
+                                    <div class="event-row"><span class="event-label">Event:</span><span class="event-val"><h3 style="display:inline; margin:0;">${event.event_name}</h3></span></div>
+                                    <div class="event-row"><span class="event-label">Date:</span><span class="event-val">${event.date}</span></div>
+                                    <div class="event-row"><span class="event-label">Time:</span><span class="event-val">${event.start_time} - ${event.end_time}</span></div>
+                                    <div class="event-row"><span class="event-label">Reward:</span><span class="event-val price text-accent font-weight-bold">${event.cost} CTK</span></div>
+                                    <div class="event-row"><span class="event-label">Seats:</span><span class="event-val">${event.seats_left} / ${event.max_participants} left</span></div>
+                                </div>
+                                ${event.user_status ? 
+                                    (event.user_status === 'applied' ? '<button class="buy-btn" style="background:#f59e0b;" disabled>Applied (Pending)</button>' : 
+                                    event.user_status === 'approved' ? '<button class="buy-btn" style="background:#10b981;" disabled>Approved</button>' :
+                                    event.user_status === 'attended' ? '<button class="buy-btn" style="background:#3b82f6;" disabled>Attended</button>' : 
+                                    '<button class="buy-btn" style="background:#ef4444;" disabled>Rejected</button>') 
+                                : 
+                                (event.seats_left > 0 ? 
+                                    `<button class="buy-btn" id="btn-apply-${event.id}" onclick="applyForEvent(${event.id})">Apply</button>` : 
+                                    '<button class="buy-btn" style="background:gray;" disabled>Full</button>')
+                                }
+                            </div>
+                        `).join('');
+                    } else {
+                        container.innerHTML = '<p style="text-align:center; padding:2rem; color:var(--text-secondary);">No upcoming events. Check back later!</p>';
+                    }
+                } else {
+                    container.innerHTML = '<p style="text-align:center; padding:2rem; color:var(--text-secondary);">No events found. Check back later!</p>';
+                }
+            } catch (err) {
+                container.innerHTML = '<p style="text-align:center; padding:2rem; color:var(--danger-primary);">Error loading events.</p>';
+            }
+        }
+
+        async function applyForEvent(id) {
+            const btn = document.getElementById('btn-apply-' + id);
+            if (btn) btn.innerText = "Applying...";
+            
+            try {
+                const response = await fetch('/api/events/apply', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ event_id: id })
+                });
+                const res = await response.json();
+                if (res.success) {
+                    alert("Successfully applied! Waiting for admin approval.");
+                    loadEvents(); // Reload state
+                } else {
+                    alert("Error: " + res.message);
+                    if (btn) btn.innerText = "Apply";
+                }
+            } catch (err) {
+                alert("Connection error.");
+                if (btn) btn.innerText = "Apply";
+            }
+        }
+
+        function openBookingModal(club, title, cost, wallet) {
+            const modal = document.getElementById("booking-modal");
+            document.getElementById("modal-event-title").innerText = title;
+            document.getElementById("modal-event-club").innerText = "Organized by: " + club;
+            document.getElementById("modal-event-price").innerText = cost + " CTK";
+            document.getElementById("token-amount").value = cost;
+            document.getElementById("purpose").value = title + " Ticket";
+            document.getElementById("student-wallet").value = wallet;
+            modal.style.display = "flex";
+        }
+
+        document.querySelector(".close-modal").onclick = () => {
+            document.getElementById("booking-modal").style.display = "none";
+        };
+
+        window.onclick = (e) => {
+            if (e.target.id === "booking-modal") {
+                document.getElementById("booking-modal").style.display = "none";
+            }
+        };
+
+        loadEvents();
+    </script>
+</body>
+</html>

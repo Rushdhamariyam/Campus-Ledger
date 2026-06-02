@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Issue Tokens - Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="send_tokens.css">
+</head>
+<body>
+    <div class="background-orbs"><div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div></div>
+    
+    <div class="container admin-container" style="max-width: 900px; width: 95%;">
+        <!-- Top Nav -->
+        <nav class="top-nav glass-panel fade-in-up">
+            <h1 class="logo-small">CampusLedger Admin</h1>
+            <div class="nav-right">
+                <a href="admin_dashboard.html" class="nav-link">Dashboard</a>
+                <a href="send_tokens.html" class="nav-link active">Send Tokens</a>
+                <a href="add_events.html" class="nav-link">Add Event</a>
+                <button id="connect-wallet-btn" class="connect-btn">Connect Wallet</button>
+            </div>
+        </nav>
+
+        <div class="wallet-connect-section glass-panel fade-in-up delay-1" style="width: 100%;">
+            <div class="wallet-status-row">
+                <div class="wallet-info">
+                    <h2 class="wallet-title">Admin Treasury</h2>
+                    <p class="wallet-desc">Issue CTK safely</p>
+                </div>
+                <div id="connected-info" class="connected-info" style="display: none;">
+                    <span class="user-name">Admin</span>
+                    <span class="wallet-address">0x...</span>
+                    <span class="wallet-balance balance-amount">0 CTK</span>
+                </div>
+                <button id="connect-wallet-btn" class="connect-btn action-btn">Connect Wallet</button>
+            </div>
+        </div>
+
+        <main class="dashboard-content-centered fade-in-up delay-1">
+            <div class="glass-panel compact-box fade-in-up delay-2">
+                <h2 class="welcome-text" style="text-align: center; margin-bottom: 2rem; font-size: 1.5rem; letter-spacing: 0.5px;">Issue Tokens</h2>
+                <form id="send-token-form" class="event-form" style="display: flex; flex-direction: column; gap: 1.25rem;">
+                    <div class="form-group">
+                        <label style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 0.4rem; display: block; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Recipient Address</label>
+                        <input type="text" id="student-wallet" class="form-input" placeholder="0x..." required style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 0.75rem 1rem; color: #fff; width: 100%; font-family: inherit;">
+                    </div>
+                    <div class="form-row" style="display: flex; gap: 1rem;">
+                        <div class="form-group" style="flex: 2;">
+                            <label style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 0.4rem; display: block; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Purpose</label>
+                            <input type="text" id="purpose" class="form-input" placeholder="e.g. Prize" required style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 0.75rem 1rem; color: #fff; width: 100%; font-family: inherit;">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 0.4rem; display: block; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Amount</label>
+                            <input type="number" id="token-amount" class="form-input" placeholder="10" required style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 0.75rem 1rem; color: #fff; width: 100%; font-family: inherit;">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary send-btn" style="margin-top: 0.5rem; width: 100%; border-radius: 12px; font-weight: 700; padding: 1rem;">Send Tokens Now</button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js" type="application/javascript"></script>
+    <script src="script.js"></script>
+</body>
+</html>

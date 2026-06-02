@@ -1,0 +1,131 @@
+/* Stats Banner */
+.stats-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 1.5rem;
+    flex-shrink: 0;
+}
+
+.stats-left {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    font-size: 1rem;
+    color: var(--text-secondary);
+}
+
+.stat-divider {
+    color: rgba(255, 255, 255, 0.2);
+}
+
+.profile-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: var(--text-primary);
+    font-weight: 600;
+    padding: 0.4rem 0.8rem;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    transition: background 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.profile-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.profile-icon {
+    font-size: 1.1rem;
+}
+
+/* Main Content area */
+.dashboard-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5vh;
+    flex-grow: 1;
+}
+
+.section-title {
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* Clubs Grid */
+.clubs-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1rem;
+    width: 100%;
+    padding: 1.5rem 0;
+}
+
+.club-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1 / 1;
+    text-decoration: none;
+    color: var(--text-primary);
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 0.5rem;
+    letter-spacing: 0.5px;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.club-card:hover {
+    color: var(--accent-primary);
+}
+
+/* Transactions Section */
+.transactions-section {
+    margin-top: 1vh;
+}
+
+/* Transactions Table */
+.table-container {
+    overflow-x: auto;
+    padding: 0;
+}
+
+.transaction-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.transaction-table th, .transaction-table td {
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.9rem;
+}
+
+.transaction-table th {
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.transaction-table tbody tr {
+    transition: background 0.3s ease;
+}
+
+.transaction-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.transaction-table tbody tr:last-child td {
+    border-bottom: none;
+}

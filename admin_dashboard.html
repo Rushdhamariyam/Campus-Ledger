@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Ledger - Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_dashboard.css') }}">
+</head>
+<body>
+    <div class="background-orbs"><div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div></div>
+    
+    <div class="dashboard-container">
+        <nav class="top-nav glass-panel fade-in-up">
+            <h1 class="logo-small">CampusLedger Admin</h1>
+            <div class="nav-right">
+                <a href="admin_dashboard.html" class="nav-link active">Dashboard</a>
+                <a href="send_tokens.html" class="nav-link">Send Tokens</a>
+                <a href="add_events.html" class="nav-link">Add Event</a>
+                <button id="connect-wallet-btn" class="connect-btn">Connect Wallet</button>
+            </div>
+        </nav>
+
+        <div class="admin-stats-box glass-panel fade-in-up delay-1">
+            <div class="club-title-row">
+                <div class="club-name-group">
+                    <img src="https://ui-avatars.com/api/?name=Admin&background=ec4899&color=fff" alt="Admin" class="club-logo-img">
+                    <div>
+                        <div class="club-label">Admin Portal</div>
+                        <h2 class="club-name user-name">Admin</h2>
+                        <button class="logout-btn-minimal" onclick="logoutUser()">
+                            <span>🚪</span> Logout
+                        </button>
+                    </div>
+                </div>
+                <div class="wallet-group">
+                    <span class="admin-address wallet-address" data-full-address="">0x...</span>
+                </div>
+            </div>
+            <div class="stats-grid" style="display: flex; gap: 2rem; margin-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1.5rem;">
+                <div class="stat-card" style="display: flex; flex-direction: column; gap: 0.25rem;">
+                    <h3 style="font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; margin: 0;">Total Distributed</h3>
+                    <span class="stat-value text-danger" id="total-sent" style="font-size: 1.4rem; font-weight: 700;">0 CTK</span>
+                </div>
+                <div class="stat-card" style="display: flex; flex-direction: column; gap: 0.25rem;">
+                    <h3 style="font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; margin: 0;">Total Received</h3>
+                    <span class="stat-value text-accent" id="total-received" style="font-size: 1.4rem; font-weight: 700;">0 CTK</span>
+                </div>
+                <div class="stat-card" style="display: flex; flex-direction: column; gap: 0.25rem;">
+                    <h3 style="font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; margin: 0;">Treasury Balance</h3>
+                    <span class="stat-value text-accent balance-amount" style="font-size: 1.4rem; font-weight: 700;">0 CTK</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="registrations-section glass-panel fade-in-up delay-2" style="margin-bottom: 2rem;">
+            <h2 class="section-title">Manage Event Registrations</h2>
+            <div id="events-registrations-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <p style="text-align:center; color:var(--text-secondary);">Loading registrations...</p>
+            </div>
+        </div>
+
+        <div class="transactions-section glass-panel fade-in-up delay-2">
+            <h2 class="section-title">Master Ledger</h2>
+            <div class="scrollable-table-container">
+                <table class="data-table">
+                    <thead><tr><th>Date</th><th>From</th><th>To</th><th>Amount</th><th>Purpose</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js" type="application/javascript"></script>
+    <script src="script.js"></script>
+    <script>
+        async function loadRegistrations() {
+            try {
+                const response = await fetch('/api/events/registrations');
+                const res = await response.json();
+                if (res.success) {
+                    const container = document.getElementById('events-registrations-container');
+                    
+                    if (res.data.length === 0) {
+                        container.innerHTML = '<p style="text-align:center; color:var(--text-secondary);">No events posted yet.</p>';
+                        return;
+                    }
+
+                    container.innerHTML = res.data.map(event => {
+                        const approvedOrAttended = event.registrations.filter(r => r.status === 'approved' || r.status === 'attended');
+                        const isFull = approvedOrAttended.length >= event.max_participants;
+
+                        return `
+                            <div class="glass-box-small" style="padding: 1rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;">
+                                    <h3 style="margin: 0; font-size: 1.2rem;">${event.event_name} 
+                                        <span style="font-size:0.8rem; background: rgba(255,255,255,0.1); padding: 0.2rem 0.5rem; border-radius: 10px; margin-left: 0.5rem;">
+                                        ${approvedOrAttended.length} / ${event.max_participants} Approved</span>
+                                    </h3>
+                                    <button class="btn btn-primary" onclick="rewardAll(${event.event_id}, ${event.reward_amount}, '${event.event_name}')" style="padding: 0.5rem 1rem; font-size:0.85rem;" id="reward-btn-${event.event_id}">Reward All Attendees (${event.reward_amount} CTK)</button>
+                                </div>
+                                
+                                ${event.registrations.length === 0 ? '<p style="font-size:0.9rem; color:var(--text-secondary);">No applications yet.</p>' : `
+                                    <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+                                        <thead>
+                                            <tr style="text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                                <th style="padding: 0.5rem; color: var(--text-secondary);">Student</th>
+                                                <th style="padding: 0.5rem; color: var(--text-secondary);">Dept</th>
+                                                <th style="padding: 0.5rem; color: var(--text-secondary);">Status</th>
+                                                <th style="padding: 0.5rem; color: var(--text-secondary); text-align: right;">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${event.registrations.map(r => `
+                                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                                    <td style="padding: 0.5rem;">${r.username}</td>
+                                                    <td style="padding: 0.5rem;">${r.department}</td>
+                                                    <td style="padding: 0.5rem;">
+                                                        <span style="background: ${r.status === 'applied' ? 'rgba(245,158,11,0.2)' : r.status==='approved' ? 'rgba(16,185,129,0.2)' : r.status==='attended' ? 'rgba(59,130,246,0.2)' : 'rgba(239,68,68,0.2)'}; 
+                                                                   color: ${r.status === 'applied' ? '#fde68a' : r.status==='approved' ? '#6ee7b7' : r.status==='attended' ? '#93c5fd' : '#fca5a5'}; 
+                                                                   padding: 0.2rem 0.5rem; border-radius: 8px; font-size: 0.75rem; text-transform: uppercase;">
+                                                            ${r.status}
+                                                        </span>
+                                                    </td>
+                                                    <td style="padding: 0.5rem; text-align: right; display: flex; gap: 0.5rem; justify-content: flex-end;">
+                                                        ${r.status === 'applied' ? `
+                                                            <button onclick="handleStatus(${r.id}, 'approve')" style="background: #10b981; border:none; padding: 0.3rem 0.6rem; border-radius: 6px; color: #000; cursor: pointer; font-weight: 600; font-size:0.8rem;" ${isFull ? 'disabled opacity="0.5"' : ''}>Approve</button>
+                                                            <button onclick="handleStatus(${r.id}, 'reject')" style="background: #ef4444; border:none; padding: 0.3rem 0.6rem; border-radius: 6px; color: #fff; cursor: pointer; font-weight: 600; font-size:0.8rem;">Reject</button>
+                                                        ` : r.status === 'approved' ? `
+                                                            <button onclick="markAttendance(${r.id})" style="background: #3b82f6; border:none; padding: 0.3rem 0.6rem; border-radius: 6px; color: #fff; cursor: pointer; font-weight: 600; font-size:0.8rem;">Mark Attended</button>
+                                                        ` : r.status === 'attended' ? `<span style="font-size:0.8rem; color:var(--text-secondary);">Ready for Reward</span>` : ''}
+                                                    </td>
+                                                </tr>
+                                            `).join('')}
+                                        </tbody>
+                                    </table>
+                                `}
+                            </div>
+                        `;
+                    }).join('');
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function handleStatus(regId, action) {
+            try {
+                const response = await fetch('/api/events/approve', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ registration_id: regId, action: action })
+                });
+                const res = await response.json();
+                if (res.success) {
+                    loadRegistrations();
+                } else {
+                    alert("Error: " + res.message);
+                }
+            } catch (err) {
+                alert("Connection error");
+            }
+        }
+
+        async function markAttendance(regId) {
+            try {
+                const response = await fetch('/api/events/attendance', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ registration_id: regId })
+                });
+                const res = await response.json();
+                if (res.success) {
+                    loadRegistrations();
+                } else {
+                    alert("Error: " + res.message);
+                }
+            } catch (err) {
+                alert("Connection error");
+            }
+        }
+        
+        async function rewardAll(eventId, amount, eventName) {
+            if (!confirm(`Are you sure you want to reward multiple attendees for ${eventName}?`)) return;
+            const btn = document.getElementById('reward-btn-' + eventId);
+            btn.innerText = "Processing...";
+            btn.disabled = true;
+
+            try {
+                // Fetch eligible wallets
+                const res1 = await fetch('/api/events/eligible_wallets/' + eventId, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data1 = await res1.json();
+                
+                if (!data1.success || !data1.wallets || data1.wallets.length === 0) {
+                    alert("No eligible attendees found with linked wallets.");
+                    btn.innerText = `Reward All Attendees (${amount} CTK)`;
+                    btn.disabled = false;
+                    return;
+                }
+
+                console.log("Eligible wallets fetched:", data1.wallets); // DEBUG PRINT
+
+                if(window.rewardMultipleAction) {
+                    await window.rewardMultipleAction(data1.wallets, amount, eventName + " Reward", eventId);
+                    alert("Successfully rewarded all attendees!");
+                } else {
+                    alert("Contract not fully loaded in script.js yet.");
+                }
+            } catch (err) {
+                alert("Error during bulk reward.");
+                console.error(err);
+            }
+            btn.innerText = `Reward All Attendees (${amount} CTK)`;
+            btn.disabled = false;
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            setTimeout(loadRegistrations, 500);
+        });
+    </script>
+</body>
+</html>

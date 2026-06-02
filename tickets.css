@@ -1,0 +1,211 @@
+.tickets-container {
+    width: 95%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 3vh 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+    z-index: 1;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 1.25rem 2rem;
+    box-shadow: 0 5px 15px -5px rgba(0, 0, 0, 0.3);
+}
+
+/* Nav */
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    flex-shrink: 0;
+}
+
+.logo-small {
+    font-size: 1.25rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #fff, #a5b4fc);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0;
+}
+
+.nav-right {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.nav-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+    padding: 0.25rem 0;
+    position: relative;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: var(--text-primary);
+}
+
+.nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--accent-primary);
+}
+
+/* Stats Banner */
+.vertical-stats-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 2rem;
+    flex-shrink: 0;
+}
+
+.stats-left-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+}
+
+.stats-right-balance {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    padding: 0.5rem 1.5rem;
+    border-radius: 12px;
+}
+
+.balance-label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.balance-amount {
+    font-size: 1.4rem;
+    color: #fff;
+    font-weight: 700;
+}
+
+.text-accent { color: var(--accent-primary); }
+.text-pink { color: var(--accent-secondary); }
+
+/* Events Section */
+.events-section {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow: hidden;
+    gap: 1rem;
+}
+
+.section-title {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    margin-left: 1rem;
+    flex-shrink: 0;
+}
+
+.events-list-scrollable {
+    flex-grow: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 0 1rem 1rem 1rem;
+}
+
+.events-list-scrollable::-webkit-scrollbar { width: 6px; }
+.events-list-scrollable::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.02); border-radius: 10px; }
+.events-list-scrollable::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
+.events-list-scrollable::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.3); }
+
+/* Event Card */
+.event-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.08);
+    transition: transform 0.3s, border-color 0.3s;
+}
+
+.event-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.event-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.event-row {
+    font-size: 1.05rem;
+}
+
+.event-label {
+    color: var(--text-secondary);
+    display: inline-block;
+    width: 100px;
+    font-weight: 600;
+}
+
+.event-val {
+    color: var(--text-primary);
+}
+
+.buy-btn {
+    background: linear-gradient(135deg, var(--accent-primary), #4f46e5);
+    color: white;
+    border: none;
+    padding: 0.85rem 2rem;
+    border-radius: 12px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 5px 15px -3px rgba(99, 102, 241, 0.4);
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.buy-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -3px rgba(99, 102, 241, 0.6);
+}
+
+@media (max-width: 600px) {
+    .event-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
+    }
+    .buy-btn {
+        width: 100%;
+    }
+}
